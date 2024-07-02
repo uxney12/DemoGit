@@ -1,0 +1,39 @@
+<head>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"></script>
+    <script>
+      $(document).ready(function() {
+        $("button").addClass("animated shake");
+      });
+    </script>
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="col-sm-6">
+    <p class="center-text">Tạo nhãn hiệu</p>
+    <form method="post" id="brandForm">
+        {% csrf_token %}
+        <br>
+        <div class="row">
+            <div class="test">
+                <label for="brand_code">Mã nhãn hiệu:</label>
+                <input type="text" id="brand_code" name="brand_code" class="form-control" required>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="test">
+                <label for="brand_name">Tên nhãn hiệu:</label>
+                <input type="text" id="brand_name" name="brand_name" class="form-control" required>
+            </div>
+        </div>
+        <br>
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <button type="submit" id="submitBtn" class="btn custom-btn">LƯU</button>
+        </div>
+    </form>
+</div>
+
+<div id="message"></div>
+{% endblock %}

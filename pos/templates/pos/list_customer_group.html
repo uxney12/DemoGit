@@ -1,0 +1,120 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-10">
+  <br>
+  <p class="center-text">Danh sách nhóm khách hàng</p>
+
+  <div class="row">
+    <div class="col-md-6 text-left">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#uploadFileModal" class="btn" id="uploadFileBtn">
+          <i class="fas fa-file-upload"></i> Nhập file
+      </a>
+
+      <!-- Modal Structure -->
+      <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="uploadFileModalLabel">Xác nhận nạp dữ liệu bằng Excel</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="form-group">
+                              <label for="file">Chọn file Excel:</label>
+                              <input type="file" id="file" name="file" class="form-control" required accept=".xls,.xlsx">
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary" id="submitUploadFileBtn">Nạp</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="http://127.0.0.1:8000/customer_group/create">
+            <button class="btn custom-btn" type="button">Thêm nhóm khách hàng</button>
+        </a>
+    </div>
+  </div>
+  <br>
+
+  {% if customer_group %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Tên nhóm</th>
+          <th>Mã nhóm</th>
+          <th>Loại nhóm</th>
+          <th>Mô tả</th>
+          <th>Số lượng khách hàng</th>
+          <th>Ngày tạo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for group in customer_group %}
+        <tr>
+          <td>{{ group.group_name }}</td>
+          <td>{{ group.group_code }}</td>
+          <td>{{ group.group_type }}</td>
+          <td>{{ group.description }}</td>
+          <td>{{ group.customer_count }}</td>
+          <td>{{ group.creation_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>There are no customer group available.</p>
+  {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    $('#uploadFileBtn').click(function() {
+      $('#uploadFileModal').modal('show');
+    });
+
+    $('#submitUploadFileBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "pos:upload_customer_group" %}';
+      var csrftoken = '{{ csrf_token }}';
+      var fileInput = document.getElementById('file').files[0];
+      var formData = new FormData();
+      formData.append('file', fileInput);
+      console.log(formData);
+      console.log('xxxxx');
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        alert("File CSV đã được tải lên và xử lý thành công");
+        $('#uploadFileModal').modal('hide');
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi xử lý tệp CSV.");
+      });
+    });
+  });
+</script>
+{% endblock %}

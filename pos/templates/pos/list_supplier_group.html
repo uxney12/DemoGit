@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-10">
+  <br>
+<p class="center-text">Danh sách nhóm nhà cung cấp</p></p>
+
+<div class="text-right">
+  <a href="http://127.0.0.1:8000/supplier_group/create">
+    <button class="btn custom-btn" type="button">Thêm nhóm hàng cung cấp</button>
+  </a>
+</div>
+<br>
+
+{% if supplier_group %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Tên nhóm</th>
+        <th>Mã nhóm</th>
+        <th>Ghi chú</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% for group in supplier_group %}
+      <tr>
+        <td>{{ group.group_code }}</td>
+        <td>{{ group.group_name }}</td>
+        <td>{{ group.notes }}</td>
+
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>There are no supplier group available.</p>
+{% endif %}
+
+{% endblock %}

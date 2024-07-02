@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-10">
+  <br>
+<p class="center-text">Danh sách đơn hàng</p>
+
+<div class="text-right">
+  <a href="http://127.0.0.1:8000/order/create">
+    <button class="btn custom-btn" type="button">Tạo đơn hàng</button>
+  </a>
+</div>
+<br>
+
+{% if order %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Mã đơn hàng</th>
+        <th>Ngày tạo đơn</th>
+        <th>Tên khách hàng</th>
+        <th>Phương thức thanh toán</th>
+        <th>Tổng tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ord in order %}
+      <tr>
+        <td>{{ ord.order_code }}</td>
+        <td>{{ ord.order_time }}</td>
+        <td>{{ ord.customer.customer_name }}</td>
+        <td>{{ ord.payment_method }}</td>
+        <td>{{ ord.total_amount }}</td>
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>There are no order available.</p>
+{% endif %}
+
+{% endblock %}

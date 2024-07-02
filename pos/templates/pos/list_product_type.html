@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-10">
+  <br>
+<p class="center-text">Danh sách oại sản phẩm</p>
+
+<div class="text-right">
+  <a href="http://127.0.0.1:8000/product_type/create">
+    <button class="btn custom-btn" type="button">Thêm loại sản phẩm</button>
+  </a>
+</div>
+<br>
+
+{% if product_type %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Tên loại sản phẩm</th>
+        <th>Mã loại</th>
+        <th>Ghi chú</th>
+        <th>Ngày tạo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for type in product_type %}
+      <tr>
+        <td>{{ type.type_code }}</td>
+        <td>{{ type.type_name }}</td>
+        <td>{{ type.notes }}</td>
+        <td>{{ type.creation_date }}</td>
+
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>There are no product type available.</p>
+{% endif %}
+
+{% endblock %}

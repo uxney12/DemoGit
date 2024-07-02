@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h1 class="mb-4">Delete Customer</h1>
+            <p>Are you sure you want to delete the customer with code: <strong>{{ customer.customer_code }}</strong>?</p>
+
+            {% if user.is_staff %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger mr-2">DELETE</button>
+                <a href="{% url 'pos:customer_detail' customer_code=customer.customer_code %}" class="btn btn-secondary">CANCEL</a>
+            </form>
+            {% else %}
+            <p class="mt-4">Only staff members are allowed to access this page.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,385 @@
+{% extends "base_generic.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Form</title>
+
+    {% block content %}
+    <div class="col-sm-6">
+</head>
+<body>
+    <p class="center-text">Tạo sản phẩm</p>
+    <form method="post" action="{% url 'pos:create_product' %}">
+        {% csrf_token %}
+        <br>
+        <div class="row">
+            <div class="test">
+                <label for="product_code">Mã sản phẩm:</label>
+                <input type="text" id="product_code" name="product_code" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="product_name">Tên sản phẩm:</label>
+                <input type="text" id="product_name" name="product_name" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="weight">Trọng lượng:</label>
+                <input type="text" id="weight" name="weight" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="product_type">Loại sản phẩm:</label>
+                <select id="product_type" name="product_type" class="form-control">
+                    <option value="">-- Chọn loại sản phẩm --</option>
+                    {% for type in product_type %}
+                    <option value="{{ type.type_code }} - {{ type.type_name }}">{{ type.type_code }} - {{ type.type_name }}</option>
+                    {% endfor %}
+                    <option value="add-new-product-type" data-bs-toggle="modal" data-bs-target="#addProductTypeModal">+ Thêm nhóm sản phẩm mới</option>
+                </select>
+            </div>
+                
+                <!-- Modal Structure -->
+                <div class="modal fade" id="addProductTypeModal" tabindex="-1" role="dialog" aria-labelledby="addProductTypeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form id="" method="post" action="">
+                              {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addProductTypeModalLabel">Thêm nhóm sản phẩm mới</h5>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                
+                                  <div class="form-group">
+                                      <label for="type_code">Mã nhóm sản phẩm:</label>
+                                      <input type="text" id="type_code" name="type_code" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="type_name">Tên nhóm sản phẩm:</label>
+                                      <input type="text" id="type_name" name="type_name" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="notes">Ghi chú:</label>
+                                      <input type="text" id="notes" name="notes" class="form-control">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="creation_date">Ngày tạo:</label>
+                                      <input type="date" id="creation_date" name="creation_date" class="form-control" value="{{ creation_date|date:'Y-m-d' }}" readonly>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" id="addProductType">Thêm</button>
+                                    <button type="button" id="closeModalBtn" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+    <div id="successProductType" class="alert alert-success" style="display:none;" role="alert">
+    Nhóm khách hàng mới đã được lưu thành công!
+    </div>
+    <div id="failProductType" class="alert alert-danger" style="display:none;" role="alert">
+    Thêm nhóm khách hàng mới đã lỗi!
+    </div>
+
+        <div class="row">
+            <div class="test">
+                <label for="brand">Nhãn hiệu:</label>
+                <select id="brand" name="brand" class="form-control">
+                    <option value="">-- Chọn nhãn hiệu --</option>
+                    {% for brand in brand %}
+                        <option value="{{ brand.brand_code }} - {{ brand.brand_name }}">{{ brand.brand_code }} - {{ brand.brand_name }}</option>
+                        {% endfor %}
+                        <option value="add-new-brand" data-bs-toggle="modal" data-bs-target="#addBrandModal">+ Thêm nhãn hiệu mới</option>
+                    </select>
+                </div>
+                    
+                    <!-- Modal Structure -->
+                    <div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form id="" method="post" action="">
+                                  {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addBrandModalLabel">Thêm nhãn hiệu mới</h5>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    
+                                      <div class="form-group">
+                                          <label for="brand_code">Mã nhãn hiệu:</label>
+                                          <input type="text" id="brand_code" name="brand_code" class="form-control" required>
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="brand_name">Tên nhãn hiệu:</label>
+                                          <input type="text" id="brand_name" name="brand_name" class="form-control" required>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary" id="addBrand">Thêm</button>
+                                        <button type="button" id="closeModalBtn" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+        <div id="successBrand" class="alert alert-success" style="display:none;" role="alert">
+        Thêm nhãn hiệu mới đã được lưu thành công!
+        </div>
+        <div id="failBrand" class="alert alert-danger" style="display:none;" role="alert">
+        Thêm nhãn hiệu mới đã lỗi!
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="barcode">Mã vạch:</label>
+                <input type="text" id="barcode" name="barcode" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="unit_of_measurement">Đơn vị đo lường:</label>
+                <input type="text" id="unit_of_measurement" name="unit_of_measurement" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="retail_price">Giá bán lẻ:</label>
+                <input type="number" id="retail_price" name="retail_price" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="wholesale_price">Giá bán buôn:</label>
+                <input type="number" id="wholesale_price" name="wholesale_price" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="purchase_price">Giá mua:</label>
+                <input type="number" id="purchase_price" name="purchase_price" class="form-control purchase_price">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="cost_price">Giá vốn:</label>
+                <input type="number" id="cost_price" name="cost_price" class="form-control cost_price">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="initial_stock">Tồn kho ban đầu:</label>
+                <input type="number" id="initial_stock" name="initial_stock" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="image">Hình ảnh:</label>
+                <input type="text" id="image" name="image" class="form-control">
+            </div>
+        </div>
+        <br>
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <button type="submit" class="btn btn-block btn-outline-success" id="addProduct">LƯU</button>
+        </div>
+    </form>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    $("button").addClass("animated shake");
+
+    function updateCostPrice() {
+      var purchasePrice = parseFloat($("#purchase_price").val()) || 0;
+      $("#cost_price").val(purchasePrice.toFixed(2));
+    }
+
+    $("#purchase_price").on("input", function() {
+      updateCostPrice();
+    });
+
+    $('#product_type').change(function() {
+      if ($(this).val() === 'add-new-product-type') {
+        $('#addProductTypeModal').modal('show');
+      }
+    });
+
+    $('#closeModalBtn').click(function() {
+      $('#addProductTypeModal').modal('hide');
+    });
+
+    $('#addProductType').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "pos:create_product_type" %}';
+      var csrftoken = '{{ csrf_token }}';
+
+      var productTypeData = {
+        type_code: $('#type_code').val(),
+        type_name: $('#type_name').val(),
+        notes: $('#notes').val(),
+        creation_date: $('#creation_date').val(),
+      };
+      console.log(productTypeData);
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(productTypeData)
+      })
+      .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            $('#addProductTypeModal').modal('hide');
+            $('#successProductType').show();
+            setTimeout(function() {
+                $('#successProductType').hide();
+            }, 3000);
+            $('#addProductTypeModal').find('input[type=text], input[type=date], select').val('');
+
+            $('#product_type').append($('<option>', {
+                value: productTypeData.type_code,
+                text: productTypeData.type_code + ' - ' + productTypeData.type_name,
+                selected: true
+            }));
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            $('#failProductType').show();
+            setTimeout(function() {
+                $('#failProductType').hide();
+            }, 3000);
+        });
+    });
+    $('#brand').change(function() {
+      if ($(this).val() === 'add-new-brand') {
+        $('#addBrandModal').modal('show');
+      }
+    });
+
+    $('#closeModalBtn').click(function() {
+      $('#addBrandModal').modal('hide');
+    });
+    $('#addBrand').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "pos:create_brand" %}';
+      var csrftoken = '{{ csrf_token }}';
+
+      var brandData = {
+        brand_code: $('#brand_code').val(),
+        brand_name: $('#brand_name').val(),
+      };
+      console.log(brandData);
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(brandData)
+      })
+      .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            $('#addBrandModal').modal('hide');
+            $('#successBrand').show();
+            setTimeout(function() {
+                $('#successBrand').hide();
+            }, 3000);
+            $('#addBrandModal').find('input[type=text], input[type=date], select').val('');
+
+            $('#brand').append($('<option>', {
+                value: brandData.brand_code,
+                text: brandData.brand_code + ' - ' + brandData.brand_name,
+                selected: true
+            }));
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            $('#failBrand').show();
+            setTimeout(function() {
+                $('#failBrand').hide();
+            }, 3000);
+        });
+    });
+  });
+
+  $('#addProduct').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "pos:create_product" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var productData = {
+                product_code: $('#product_code').val(),
+                product_name: $('#product_name').val(),
+                weight: $('#weight').val(),
+                product_type: $('#product_type').val(),
+                brand: $('#brand').val(),
+                barcode: $('#barcode').val(),
+                unit_of_measurement: $('#unit_of_measurement').val(),
+                retail_price: $('#retail_price').val(),
+                wholesale_price: $('#wholesale_price').val(),
+                purchase_price: $('#purchase_price').val(),
+                image: $('#image').val(),
+                cost_price: $('#cost_price').val(),
+                initial_stock: $('#initial_stock').val(),
+            
+            };
+
+            console.log(productData);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(productData)
+            })
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => {
+              location.reload();
+                
+        });
+      });
+
+</script>
+
+{% endblock %}
+</html>

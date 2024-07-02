@@ -1,0 +1,87 @@
+<script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    $("button").addClass("animated shake");
+  });
+</script>
+
+<style>
+  .test{
+    font-size: 15px;
+    font-family: Lobster;
+    color: #173d3b;
+  }
+  p{
+    font-size: 20px;
+    font-family: Lobster;
+    color: #57A6A1;
+    font-weight: bold;
+  }
+  .thick-border {
+    border-color: #57A6A1;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 10px; 
+    box-sizing: border-box; 
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+
+  .center-text {
+    text-align: center;
+  }
+
+  .center {
+  display: flex;
+  justify-content: center;
+}
+</style>
+
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="col-sm-6">
+</head>
+<body>
+    <p class="center-text">Tạo loại sản phẩm</p>
+    <form method="post">
+        {% csrf_token %}
+        <br>
+        <div class="row">
+            <div class="test">
+                <label for="type_code">Mã loại:</label>
+                <input type="text" id="type_code" name="type_code" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="type_name">Tên loại:</label>
+                <input type="text" id="type_name" name="type_name" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="notes">Ghi chú:</label>
+                <textarea id="notes" name="notes" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="creation_date">Ngày tạo:</label>
+                <input type="text" id="creation_date" name="creation_date" class="form-control" value="{{ current_time }}" readonly>
+            </div>
+        </div>
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <button type="submit" class="btn btn-block btn-outline-success">LƯU</button>
+        </div>
+    </form>
+</body>
+</html>
+{% endblock %}

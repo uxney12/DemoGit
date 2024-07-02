@@ -1,0 +1,87 @@
+<style>
+  h1 {
+    font-size: 20px;
+    font-family: Lobster;
+    color: #57A6A1;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 12px; 
+    font-family: Calibri;
+    font-weight: bold;
+    color: #57A6A1;
+    margin-bottom: 10px;
+  }
+
+  .center-text {
+    text-align: center;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+
+  .col {
+    flex: 1 1 calc(33.333% - 4px);
+    margin: 2px;
+  }
+
+  .thick-border {
+    border-color: #57A6A1;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 10px; 
+    box-sizing: border-box; 
+  }
+</style>
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-10">
+
+  <h1 class="center-text">SIMONA</h1>
+
+  <h2>Live Orders</h2> 
+
+  <div class="row">
+    <div class="col">
+      <div class="thick-border">
+        <strong>Product Types:</strong> {{ num_product_types }}
+      </div>
+    </div>
+    <div class="col">
+      <div class="thick-border">
+        <strong>Products:</strong> {{ num_products }}
+      </div>
+    </div>
+    <div class="col">
+      <div class="thick-border">
+        <strong>Customer Segment:</strong> {{ num_customer_groups }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="thick-border">
+        <strong>Customers:</strong> {{ num_customers }}
+      </div>
+    </div>
+    <div class="col">
+      <div class="thick-border">
+        <strong>Orders:</strong> {{ num_orders }}
+      </div>
+    </div>
+    <div class="col">
+      <div class="thick-border">
+        <strong>Order Lines:</strong> {{ num_order_lines }}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-10">
+  <br>
+<p class="center-text">Danh sách nhãn hiệu</p>
+
+<div class="text-right">
+  <a href="http://127.0.0.1:8000/brand/create">
+    <button class="btn custom-btn" type="button">Thêm nhãn hiệu</button>
+  </a>
+</div>
+<br>
+
+{% if brand %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Mã nhãn hiệu</th>
+        <th>Tên nhãn hiệu</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for br in brand %}
+      <tr>
+        <td>{{ br.brand_code }}</td>
+        <td>{{ br.brand_name }}</td>   
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>There are no brand available.</p>
+{% endif %}
+
+{% endblock %}

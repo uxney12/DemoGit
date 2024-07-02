@@ -1,0 +1,56 @@
+<head>
+  <script
+    src="https://code.jquery.com/jquery-3.7.1.js"
+    integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $("button").addClass("animated shake");
+    });
+  </script>
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="col-sm-6">
+</head>
+<body>
+  <p class="center-text">Tạo nhóm khách hàng</p>
+  <form method="post">
+      {% csrf_token %}
+      <br>
+      <div class="row">
+          <div class="test">
+              <label for="group_code">Mã nhóm:</label>
+              <input type="text" id="group_code" name="group_code" class="form-control" required>
+          </div>
+      </div>
+      <div class="row">
+          <div class="test">
+              <label for="group_name">Tên nhóm:</label>
+              <input type="text" id="group_name" name="group_name" class="form-control" required>
+          </div>
+      </div>
+      <div class="row">
+          <div class="test">
+              <label for="group_type">Loại:</label>
+              <input type="text" id="group_type" name="group_type" class="form-control">
+          </div>
+      </div>
+      <div class="row">
+          <div class="test">
+              <label for="description">Mô tả:</label>
+              <textarea id="description" name="description" class="form-control"></textarea>
+          </div>
+      </div>
+      <div class="row">
+          <div class="test">
+              <label for="creation_date">Ngày tạo:</label>
+              <input type="text" id="creation_date" name="creation_date" class="form-control" value="{{ current_time }}" readonly>
+          </div>
+      </div>
+      <div class="d-grid gap-2 col-4 mx-auto">
+          <button type="submit" class="btn btn-block btn-outline-success">LƯU</button>
+      </div>
+  </form>
+</body>
+</html>
+{% endblock %}

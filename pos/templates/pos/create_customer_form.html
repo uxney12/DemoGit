@@ -1,0 +1,291 @@
+{% extends "base_generic.html" %}
+<head>
+{% block content %}
+<div class="col-sm-6">
+</head>
+<body>
+    <p class="center-text">Tạo khách hàng</p>
+    <form method="post" action="{% url 'pos:create_customer' %}>
+        {% csrf_token %}
+        <br>
+        <div class="row">
+            <div class="test">
+            <label for="customer_code">Mã khách hàng:</label>
+            <input type="text" id="customer_code" name="customer_code" class="form-control" value="{{ new_customer_id }}" readonly>
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="customer_name">Tên khách hàng:</label>
+            <input type="text" id="customer_name" name="customer_name" class="form-control" required>
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="customer_group">Nhóm khách hàng:</label>
+            <select id="customer_group" name="customer_group" class="form-control">
+                <option value="">-- Chọn nhóm khách hàng --</option>
+                {% for group in customer_group %}
+                    <option value="{{ group.group_code }} - {{ group.group_name }}">{{ group.group_code }} - {{ group.group_name }}</option>
+                {% endfor %}
+                <option value="add-new-customer-group" data-bs-toggle="modal" data-bs-target="#addCustomerGroupModal">+ Thêm nhóm khách hàng</option>
+            </select>
+        </div>
+        
+        <div class="modal fade" id="addCustomerGroupModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerGroupModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="" method="post" action="">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCustomerModalLabel">Thêm nhóm khách hàng mới</h5>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <label for="group_code">Mã nhóm khách hàng:</label>
+                                <input type="text" id="group_code" name="group_code" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="group_name">Tên nhóm khách hàng:</label>
+                                <input type="text" id="group_name" name="group_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="group_type">Loại nhóm:</label>
+                                <input type="text" id="group_type" name="group_type" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Mô tả:</label>
+                                <textarea id="description" name="description" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="creation_date">Ngày tạo:</label>
+                                <input type="date" id="creation_date" name="creation_date" class="form-control" value="{{ creation_date|date:'Y-m-d' }}" readonly>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="addCustomerGroup">Thêm</button>
+                            <button type="button" id="closeModalBtn" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <br>
+    <div id="successMessage" class="alert alert-success" style="display:none;" role="alert">
+    Nhóm khách hàng mới đã được lưu thành công!
+    </div>
+    <div id="failMessage" class="alert alert-danger" style="display:none;" role="alert">
+    Thêm nhóm khách hàng mới đã lỗi!
+    </div>
+        
+        <div class="row">
+            <div class="test">
+            <label for="phone_number">Số điện thoại:</label>
+            <input type="text" id="phone_number" name="phone_number" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="region">Khu vực:</label>
+            <input type="text" id="region" name="region" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="ward">Phường/xã:</label>
+            <input type="text" id="ward" name="ward" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="specific_address">Địa chỉ cụ thể:</label>
+            <input type="text" id="specific_address" name="specific_address" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="birth_date">Ngày sinh:</label>
+            <input type="date" id="birth_date" name="birth_date" class="form-control" placeholder="YYYY-MM-DD" title="Định dạng: YYYY-MM-DD">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="gender">Giới tính:</label>
+            <select id="gender" name="gender" class="form-control">
+                <option value="" selected>--------------</option>
+                <option value="Male">Nam</option>
+                <option value="Female">Nữ</option>
+                <option value="Other">Khác</option>
+              </select>
+            </select>
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="fax_number">Số fax:</label>
+            <input type="text" id="fax_number" name="fax_number" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="tax_code">Mã số thuế:</label>
+            <input type="text" id="tax_code" name="tax_code" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="website">Website:</label>
+            <input type="text" id="website" name="website" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="debt">Nợ:</label>
+            <input type="number" id="debt" name="debt" class="form-control">
+        </div>
+    </div>
+        <div class="row">
+            <div class="test">
+            <label for="total_spending">Tổng chi tiêu:</label>
+            <input type="number" id="total_spending" name="total_spending" class="form-control">
+        </div>
+    </div>
+    <br>
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <button type="submit" class="btn btn-block btn-outline-success" id="addCustomer">LƯU</button>
+        </div>
+    </form>
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+        $("button").addClass("animated shake");
+        
+        $('#customer_group').change(function() {
+            if ($(this).val() === 'add-new-customer-group') {
+                $('#addCustomerGroupModal').modal('show');
+            }
+        });
+
+        $('#closeModalBtn').click(function() {
+            $('#addCustomerGroupModal').modal('hide');
+        });
+
+        $('#addCustomerGroup').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "pos:create_customer_group" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var customerGroupData = {
+                group_code: $('#group_code').val(),
+                group_name: $('#group_name').val(),
+                group_type: $('#group_type').val(),
+                description: $('#description').val(),
+                creation_date: $('#creation_date').val(),
+            };
+            console.log(customerGroupData);
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(customerGroupData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                $('#addCustomerGroupModal').modal('hide');
+                $('#successMessage').show();
+                setTimeout(function() {
+                    $('#successMessage').hide();
+                }, 3000);
+
+                // Clear form fields
+                $('#addCustomerGroupModal').find('input[type=text], input[type=date], select').val('');
+
+                // Add new option to select menu
+                $('#customer_group').append($('<option>', {
+                    value: customerGroupData.group_code,
+                    text: customerGroupData.group_code + ' - ' + customerGroupData.group_name,
+                    selected: true
+                }));
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                $('#failMessage').show();
+                setTimeout(function() {
+                    $('#failMessage').hide();
+                }, 3000);
+            });
+        });
+
+        $('#addCustomer').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "pos:create_customer" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var customerData = {
+            customer_code: $('#customer_code').val(),
+            customer_name: $('#customer_name').val(),
+            customer_group: $('#customer_group').val(),
+            phone_number: $('#phone_number').val(),
+            email: $('#email').val(),
+            region: $('#region').val(),
+            ward: $('#ward').val(),
+            specific_address: $('#specific_address').val(),
+            birth_date: $('#birth_date').val(),
+            gender: $('#gender').val(),
+            fax_number: $('#fax_number').val(),
+            tax_code: $('#tax_code').val(),
+            website: $('#website').val(),
+            debt: $('#debt').val(),
+            total_spending: $('#total_spending').val()
+            };
+            console.log(customerData);
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(customerData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => {
+                location.reload();
+            });
+        });
+    });
+
+</script>
+
+{% endblock %}

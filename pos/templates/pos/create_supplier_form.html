@@ -1,0 +1,260 @@
+{% extends "base_generic.html" %}
+<head>
+{% block content %}
+<div class="col-sm-6">
+</head>
+<body>
+    <p class="center-text">Tạo nhà cung cấp</p>
+    <form method="post">
+        {% csrf_token %}
+        <br>
+        <div class="row">
+            <div class="test">
+                <label for="supplier_code">Mã nhà cung cấp:</label>
+                <input type="text" id="supplier_code" name="supplier_code" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="supplier_name">Tên nhà cung cấp:</label>
+                <input type="text" id="supplier_name" name="supplier_name" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="supplier_group">Nhóm nhà cung cấp:</label>
+                <select id="supplier_group" name="supplier_group" class="form-control">
+                    <option value="">-- Chọn nhóm nhà cung cấp --</option>
+                    {% for group in supplier_group %}
+                        <option value="{{ group.group_code }} - {{ group.group_name }}">{{ group.group_code }} - {{ group.group_name }}</option>
+                        {% endfor %}
+                        <option value="add-new-supplier-group" data-bs-toggle="modal" data-bs-target="#addSupplierGroupModal">+ Thêm nhóm nhà cung cấp mới</option>
+                    </select>
+                </div>
+                    
+                    <!-- Modal Structure -->
+                    <div class="modal fade" id="addSupplierGroupModal" tabindex="-1" role="dialog" aria-labelledby="addSupplierGroupModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form id="" method="post" action="">
+                                  {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addSupplierGroupModalLabel">Thêm nhóm nhà cung cấp mới</h5>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    
+                                      <div class="form-group">
+                                          <label for="group_code">Mã nhóm nhà cung cấp:</label>
+                                          <input type="text" id="group_code" name="group_code" class="form-control" required>
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="group_name">Tên nhóm nhà cung cấp:</label>
+                                          <input type="text" id="group_name" name="group_name" class="form-control" required>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="notes">Ghi chú:</label>
+                                        <input type="text" id="notes" name="notes" class="form-control" required>
+                                    </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary" id="addSupplierGroup">Thêm</button>
+                                        <button type="button" id="closeModalBtn" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+        <div id="successSupplierGroup" class="alert alert-success" style="display:none;" role="alert">
+        Thêm nhãn hiệu mới đã được lưu thành công!
+        </div>
+        <div id="failSupplierGroup" class="alert alert-danger" style="display:none;" role="alert">
+        Thêm nhãn hiệu mới đã lỗi!
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="phone_number">Số điện thoại:</label>
+                <input type="text" id="phone_number" name="phone_number" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="region">Khu vực:</label>
+                <input type="text" id="region" name="region" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="ward">Phường/xã:</label>
+                <input type="text" id="ward" name="ward" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="address_1">Địa chỉ 1:</label>
+                <input type="text" id="address_1" name="address_1" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="address_2">Địa chỉ 2:</label>
+                <input type="text" id="address_2" name="address_2" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="fax_number">Số fax:</label>
+                <input type="text" id="fax_number" name="fax_number" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="tax_code">Mã số thuế:</label>
+                <input type="text" id="tax_code" name="tax_code" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="website">Website:</label>
+                <input type="text" id="website" name="website" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="test">
+                <label for="debt">Nợ:</label>
+                <input type="number" id="debt" name="debt" class="form-control">
+            </div>
+        </div>
+        <br>
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <button type="submit" class="btn btn-block btn-outline-success" id="addSupplier">LƯU</button>
+        </div>
+    </form>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+    $("button").addClass("animated shake");
+
+    $('#supplier_group').change(function() {
+        if ($(this).val() === 'add-new-supplier-group') {
+            $('#addSupplierGroupModal').modal('show');
+        }
+    });
+
+    $('#closeModalBtn').click(function() {
+        $('#addSupplierGroupModal').modal('hide');
+    });
+
+    $('#addSupplierGroup').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "pos:create_supplier_group" %}';
+      var csrftoken = '{{ csrf_token }}';
+
+      var supplierGroupData = {
+        group_code: $('#group_code').val(),
+        group_name: $('#group_name').val(),
+        notes: $('#notes').val(),
+      };
+      console.log(supplierGroupData);
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(supplierGroupData)
+      })
+      .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            $('#addSupplierGroupModal').modal('hide');
+            $('#successSupplierGroup').show();
+            setTimeout(function() {
+                $('#successSupplierGroup').hide();
+            }, 3000);
+            $('#addSupplierGroupModal').find('input[type=text], input[type=date], select').val('');
+
+            $('#product_type').append($('<option>', {
+                value: supplierGroupData.group_code,
+                text: supplierGroupData.group_code + ' - ' + supplierGroupData.group_name,
+                selected: true
+            }));
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            $('#failSupplierGroup').show();
+            setTimeout(function() {
+                $('#failSupplierGroup').hide();
+            }, 3000);
+        });
+    });
+    $('#addSupplier').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "pos:create_supplier" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var supplierData = {
+                supplier_code: $('#supplier_code').val(),
+                supplier_name: $('#supplier_name').val(),
+                supplier_group: $('#supplier_group').val(),
+                phone_number: $('#phone_number').val(),
+                email: $('#email').val(),
+                region: $('#region').val(),
+                ward: $('#ward').val(),
+                address_1: $('#address_1').val(),
+                address_2: $('#address_2').val(),
+                fax_number: $('#fax_number').val(),
+                tax_code: $('#tax_code').val(),
+                website: $('#website').val(),
+                debt: $('#debt').val(),
+            
+            };
+
+            console.log(supplierData);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(supplierData)
+            })
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => {
+              location.reload();
+                
+        });
+      });
+});
+</script>
+
+{% endblock %}

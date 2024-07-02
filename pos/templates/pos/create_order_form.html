@@ -1,0 +1,454 @@
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-6">
+<div class="container">
+  <form action="" method="post">
+    {% csrf_token %}
+    <br>
+    <p class="center-text">TẠO ĐƠN HÀNG</p>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="test">
+          <label for="order_code">Mã đơn:</label>
+          <br>
+          <input type="text" id="order_code" name="order_code" class="form-control" value="{{ new_order_id }}" readonly>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="test">
+          <label for="order_time">Thời gian tạo đơn:</label>
+          <br>
+          <input type="text" id="order_time" name="order_time" class="form-control" value="{{ current_time }}" readonly>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="test">
+          <label for="delivery_date">Hẹn giao:</label>
+          <br>
+          <input type="date" id="delivery_date" name="delivery_date" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="test">
+      <label for="customer">Thông tin khách hàng:</label>
+      <br>
+      <select id="customer" name="customer" class="form-control">
+          <option value="" selected>--------------</option>
+          {% for customer in customers %}
+          <option value="{{ customer.customer_code }}">{{ customer.customer_code }} - {{ customer.customer_name }}</option>
+          {% endfor %}
+          <option value="add-new-customer" data-bs-toggle="modal" data-bs-target="#addCustomerModal">+ Thêm khách hàng mới</option>
+      </select>
+  </div>
+  
+  <!-- Modal Structure -->
+  <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <form id="" method="post" action="">
+                {% csrf_token %}
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="addCustomerModalLabel">Thêm khách hàng mới</h5>
+                      <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                  
+                    <div class="form-group">
+                        <label for="customer_code">Mã khách hàng:</label>
+                        <input type="text" id="customer_code" name="customer_code" class="form-control" value="{{ new_customer_id }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer_name">Tên khách hàng:</label>
+                        <input type="text" id="customer_name" name="customer_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer_group">Nhóm khách hàng:</label>
+                        <select id="customer_group" name="customer_group" class="form-control">
+                            <option value="">-- Chọn nhóm khách hàng --</option>
+                            {% for group in customer_group %}
+                            <option value="{{ group.group_code }}">{{ group.group_code }} - {{ group.group_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">Số điện thoại:</label>
+                        <input type="text" id="phone_number" name="phone_number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="region">Khu vực:</label>
+                        <input type="text" id="region" name="region" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="ward">Phường/Xã:</label>
+                        <input type="text" id="ward" name="ward" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="specific_address">Địa chỉ cụ thể:</label>
+                        <input type="text" id="specific_address" name="specific_address" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="birth_date">Ngày sinh:</label>
+                        <input type="date" id="birth_date" name="birth_date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Giới tính:</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="">-- Chọn giới tính --</option>
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fax_number">Số fax:</label>
+                        <input type="text" id="fax_number" name="fax_number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="tax_code">Mã số thuế:</label>
+                        <input type="text" id="tax_code" name="tax_code" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="website">Website:</label>
+                        <input type="text" id="website" name="website" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="debt">Nợ:</label>
+                        <input type="text" id="debt" name="debt" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="total_spending">Tổng chi tiêu:</label>
+                        <input type="text" id="total_spending" name="total_spending" class="form-control">
+                    </div>
+                </div>                
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary" id="addCustomer">Thêm</button>
+                      <button type="button" id="closeModalBtn" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  
+  <br>
+  <div id="successMessage" class="alert alert-success" style="display:none;" role="alert">
+    Khách hàng mới đã được lưu thành công!
+  </div>
+  <div id="failMessage" class="alert alert-danger" style="display:none;" role="alert">
+    Thêm khách hàng mới đã lỗi!
+  </div>
+    <div class="test">
+      <label for="source">Nguồn:</label>
+      <select id="source" name="source" class="form-control">
+        <option value="" selected>--------------</option>
+        <option>Trực tiếp</option>
+        <option>Facebook</option>
+        <option>Shopee</option>
+        <option>Tiktok Shop</option>
+        <option>Lazada</option>
+        <option>Khác</option>
+      </select>
+    </div>
+    <div class="test">
+      <label for="payment_method">Phương thức thanh toán:</label>
+      <select id="payment_method" name="payment_method" class="form-control">
+        <option value="" selected>--------------</option>
+        <option>Tiền mặt</option>
+        <option>Chuyển khoản</option>
+        <option>Thẻ</option>
+      </select>
+    </div>
+    <div class="test">
+      <label for="reference">Tham chiếu:</label>
+      <br>
+      <input type="text" id="reference" name="reference" class="form-control">
+    </div>
+    <div class="test">
+      <label for="order_link">Đường dẫn đơn hàng:</label>
+      <br>
+      <input type="text" id="order_link" name="order_link" class="form-control">
+    </div>
+    <div class="test">
+      <label for="total_amount">Tổng tiền:</label>
+      <br>
+      <input type="text" id="total_amount" name="total_amount" class="form-control" readonly>
+    </div>
+    <br>
+    <br>
+    <hr class="row">
+    <br>
+    <div class="order-lines">
+      <div class="order-line">
+          <div class="row">
+              <div class="col-sm-6">
+                  <div class="test">
+                      <label for="order_line_code">STT:</label>
+                      <br>
+                      <input type="text" name="order_line_code" class="form-control order-line-code" value="L001" readonly>
+                  </div>
+              </div>
+          <div class="col-sm-6">
+            <div class="test">
+              <label for="product_obj">Sản phẩm:</label>
+              <br>
+              <select class="form-control product-select" name="product" required>
+                <option value="" selected>--------------</option>
+                {% for product in products %}
+                <option value="{{ product.product_code }}" data-unit-price="{{ product.retail_price }}">{{ product.product_code }} - {{ product.product_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="test">
+              <label for="quantity">Số lượng:</label>
+              <br>
+              <input type="text" name="quantity" class="form-control quantity" required>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="test">
+                <label for="unit_price">Đơn giá:</label>
+                <br>
+                <input type="text" name="unit_price" class="form-control unit-price" readonly>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="test">
+              <label for="discount">Chiết khấu:</label>
+              <br>
+              <input type="text" name="discount" class="form-control discount">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="test">
+              <label for="total_price">Thành tiền:</label>
+              <br>
+              <input type="text" name="total_price" class="form-control total-price" readonly>
+            </div>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="d-grid gap-2 col-4 mx-auto">
+      <button class="btn btn-block btn-outline-info" type="button" id="add-product-btn">Thêm sản phẩm</button>
+      <button type="submit" class="btn btn-block btn-outline-success" id="addOrder">LƯU</button>
+    </div>
+    <br>
+    <div id="successOrder" class="alert alert-success" style="display:none;" role="alert">
+      Đơn hàng mới đã được lưu thành công!
+    </div>
+    <br>
+    <div id="failOrder" class="alert alert-danger" style="display:none;" role="alert">
+      Thêm đơn hàng mới đã lỗi!
+    </div>
+  </form>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+  var orderLineCount = 1;
+
+  function updateUnitPrice() {
+        $(".order-line").each(function(index) {
+            var lineCode = "L" + (index + 1).toString().padStart(3, '0'); 
+            $(this).find(".order-line-code").val(lineCode);
+            var selectedOption = $(this).find(".product-select option:selected");
+            var unitPrice = selectedOption.data('unit-price');
+            $(this).find(".unit-price").val(unitPrice);
+            updateTotalPrice($(this));
+        });
+        updateTotalAmount();
+  }
+
+  function updateTotalPrice(orderLine) {
+    var quantity = parseFloat(orderLine.find(".quantity").val()) || 0;
+    var unitPrice = parseFloat(orderLine.find(".unit-price").val()) || 0;
+    var discount = parseFloat(orderLine.find(".discount").val()) || 0;
+    var totalPrice = quantity * unitPrice * (1 - discount / 100);
+    orderLine.find(".total-price").val(totalPrice.toFixed(2));
+  }
+
+  function updateTotalAmount() {
+    var totalAmount = 0;
+    $(".order-line").each(function() {
+      var totalPrice = parseFloat($(this).find(".total-price").val()) || 0;
+      totalAmount += totalPrice;
+    });
+    $("#total_amount").val(totalAmount.toFixed(2));
+  }
+  updateUnitPrice();
+
+  $(document).on('change', '.product-select', function() {
+    updateUnitPrice();
+  });
+
+
+  $(document).on('input', '.quantity, .unit-price, .discount', function() {
+    var orderLine = $(this).closest(".order-line");
+    updateTotalPrice(orderLine);
+    updateTotalAmount();
+  });
+
+
+  $("#add-product-btn").click(function() {
+        var orderLine = $(".order-line").first().clone();
+        orderLine.find("input").val("");
+        orderLine.find(".product-select").val("");
+        orderLine.find(".quantity").val("");
+        orderLine.find(".discount").val("");
+        orderLine.find(".order-line-code").val("L" + (orderLineCount + 1).toString().padStart(3, '0'));
+        orderLine.appendTo(".order-lines");
+        orderLineCount++; // Tăng biến đếm STT
+        updateUnitPrice();
+    });
+
+  $('#addCustomer').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "pos:create_customer" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var customerData = {
+              customer_code: $('#customer_code').val(),
+              customer_name: $('#customer_name').val(),
+              customer_group:$('#customer_group').val(),
+              phone_number: $('#phone_number').val(),
+              email: $('#email').val(),
+              region: $('#region').val(),
+              ward: $('#ward').val(),
+              specific_address: $('#specific_address').val(),
+              birth_date: $('#birth_date').val(),
+              gender: $('#gender').val(),
+              fax_number: $('#fax_number').val(),
+              tax_code: $('#tax_code').val(),
+              website: $('#website').val(),
+              debt: $('#debt').val(),
+              total_spending: $('#total_spending').val()
+            };
+            console.log(customerData);
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(customerData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+            $('#addCustomerModal').modal('hide');
+            $('#successMessage').show();
+            setTimeout(function() {
+                $('#successMessage').hide();
+            }, 3000);
+
+            $('#addCustomerModal').find('input[type=text], input[type=email], select').val('');
+            $('#addCustomerModal').find('#customer_code').val(customerData.new_customer_id);
+            
+            $('#customer').append($('<option>', {
+                value: customerData.customer_code,
+                text: customerData.customer_code + ' - ' + customerData.customer_name,
+                selected: true
+            }));
+        })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                $('#failMessage').show();
+                setTimeout(function() {
+                    $('#failMessage').hide();
+                }, 3000);
+            });
+            console.log("send ok");
+        });
+
+          $('#customer').change(function() {
+            if ($(this).val() === 'add-new-customer') {
+              $('#addCustomerModal').modal('show');
+            }
+          });
+
+          $('#closeModalBtn').click(function() {
+            $('#addCustomerModal').modal('hide');
+          });
+        });
+
+
+  $('#addOrder').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "pos:create_order" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var orderData = {
+                order_code: $('#order_code').val(),
+                order_time: $('#order_time').val(),
+                delivery_date: $('#delivery_date').val(),
+                customer: $('#customer').val(),
+                source: $('#source').val(),
+                payment_method: $('#payment_method').val(),
+                reference: $('#reference').val(),
+                order_link: $('#order_link').val(),
+                total_amount: $('#total_amount').val(),
+                order_lines: []
+            };
+
+            $(".order-line").each(function() {
+                var orderLine = {
+                    order_line_code: $(this).find(".order-line-code").val(),
+                    product: $(this).find(".product-select").val(),
+                    quantity: $(this).find(".quantity").val(),
+                    unit_price: $(this).find(".unit-price").val(),
+                    discount: $(this).find(".discount").val(),
+                    total_price: $(this).find(".total-price").val()
+                };
+                orderData.order_lines.push(orderLine);
+            });
+
+            console.log(orderData);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => {
+              location.reload();
+                
+        });
+      });
+
+</script>
+
+{% endblock %}
