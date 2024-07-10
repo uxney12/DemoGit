@@ -4,12 +4,14 @@ from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductTyp
 from django.utils.timezone import now as timezone_now
 import pandas as pd 
 import os 
+import requests
 import time
 from datetime import datetime
 import json
 from django.http import JsonResponse
 from django.shortcuts import redirect
-
+import io
+from django.contrib import messages
 
 
 def index(request):
@@ -44,20 +46,33 @@ def index(request):
 ############################################################
 
 
-@csrf_exempt 
+@csrf_exempt
 def upload_customer_group(request):
-    print("1XXXXXXXXXXXXXXXXXXXXX")
-    if request.method == 'POST' and request.FILES.get('file'):
-        print("2XXXXXXXXXXXXXXXXXXXXX")
-        uploaded_file = request.FILES['file'] 
-        excel_data = uploaded_file.read()
-        df = pd.read_excel(excel_data)
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
         required_columns = ['Mã nhóm', 'Tên nhóm', 'Loại', 'Mô tả', 'Số lượng khách hàng', 'Ngày tạo']
-        
+
         if not all(col in df.columns for col in required_columns):
-            messages.error(request, 'Thiếu các cột bắt buộc trong tệp Excel.')
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
             return redirect('/customer_group')
-        
+
         for index, row in df.iterrows():
             CustomerGroup.objects.create(
                 group_code=row['Mã nhóm'],
@@ -67,11 +82,346 @@ def upload_customer_group(request):
                 customer_count=row['Số lượng khách hàng'],
                 creation_date=row['Ngày tạo'],
             )
-        print("3XXXXXXXXXXXXXXXXXXXXX")
-        return JsonResponse({'message': 'Dữ liệu đã được tải lên từ Excel thành công!'})
-    
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
     return JsonResponse({'error': 'Bad request'}, status=400)
-        
+
+
+@csrf_exempt
+def upload_customer(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã khách hàng', 'Tên khách hàng', 'Nhóm khách hàng', 'Số điện thoại', 'Email', 'Khu vực', 'Phường/Xã', 'Địa chỉ cụ thể', 'Ngày sinh', 'Giới tính', 'Số fax', 'Mã số thuế', 'Website', 'Nợ', 'Tổng chi tiêu']
+
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
+            return redirect('/customer')
+
+        for index, row in df.iterrows():
+            customer_group, created = CustomerGroup.objects.get_or_create(group_code=row['Nhóm khách hàng'])
+
+            Customer.objects.create(
+                customer_code=row['Mã khách hàng'],
+                customer_name=row['Tên khách hàng'],
+                customer_group=customer_group,
+                phone_number=row['Số điện thoại'],
+                email=row['Email'],
+                region=row['Khu vực'],
+                ward=row['Phường/Xã'],
+                specific_address=row['Địa chỉ cụ thể'],
+                birth_date=row['Ngày sinh'],
+                gender=row['Giới tính'],
+                fax_number=row['Số fax'],
+                tax_code=row['Mã số thuế'],
+                website=row['Website'],
+                debt=row['Nợ'],
+                total_spending=row['Tổng chi tiêu'],
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
+
+@csrf_exempt
+def upload_supplier_group(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã nhóm', 'Tên nhóm', 'Ghi chú']
+
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
+            return redirect('/supplier_group')
+
+        for index, row in df.iterrows():
+
+            SupplierGroup.objects.create(
+                group_code=row['Mã nhóm'],
+                group_name=row['Tên nhóm'],
+                notes=row['Ghi chú']
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
+
+@csrf_exempt
+def upload_supplier(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã nhà cung cấp', 'Tên nhà cung cấp', 'Nhóm nhà cung cấp', 'Số điện thoại', 'Email', 'Khu vực', 'Phường/Xã', 'Địa chỉ 1', 'Địa chỉ 2', 'Số fax', 'Mã số thuế', 'Website', 'Nợ']
+
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
+            return redirect('/supplier')
+
+        for index, row in df.iterrows():
+            supplier_group, created = SupplierGroup.objects.get_or_create(group_code=row['Nhóm nhà cung cấp'])
+
+            Supplier.objects.create(
+                supplier_code=row['Mã nhà cung cấp'],
+                supplier_name=row['Tên nhà cung cấp'],
+                supplier_group=supplier_group,
+                phone_number=row['Số điện thoại'],
+                email=row['Email'],
+                region=row['Khu vực'],
+                ward=row['Phường/Xã'],
+                address_1=row['Địa chỉ 1'],
+                address_2=row['Địa chỉ 2'],
+                fax_number=row['Số fax'],
+                tax_code=row['Mã số thuế'],
+                website=row['Website'],
+                debt=row['Nợ']
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
+
+@csrf_exempt
+def upload_brand(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã nhãn hiệu', 'Tên nhãn hiệu']
+
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
+            return redirect('/brand')
+
+        for index, row in df.iterrows():
+
+            Brand.objects.create(
+                brand_code=row['Mã nhãn hiệu'],
+                brand_name=row['Tên nhãn hiệu'],
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
+
+@csrf_exempt
+def upload_product_type(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã loại', 'Tên loại', 'Ghi chú', 'Ngày tạo']
+
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
+            return redirect('/product_type')
+
+        for index, row in df.iterrows():
+
+            ProductType.objects.create(
+                type_code=row['Mã loại'],
+                type_name=row['Tên loại'],
+                notes=row['Ghi chú'],
+                creation_date=row['Ngày tạo']
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
+
+@csrf_exempt
+def upload_product(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã sản phẩm', 'Tên sản phẩm', 'Trọng lượng', 'Loại sản phẩm', 'Nhãn hiệu', 'Mã vạch', 'Đơn vị đo lường', 'Giá bán lẻ', 'Giá bán buôn', 'Giá mua', 'Hình ảnh', 'Giá vốn', 'Tồn kho ban đầu']
+
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, 'Thiếu các cột bắt buộc trong tệp.')
+            return redirect('/product')
+
+        for index, row in df.iterrows():
+            product_type, created = ProductType.objects.get_or_create(type_code=row['Loại sản phẩm'])
+            brand, created = Brand.objects.get_or_create(brand_code=row['Nhãn hiệu'])
+            Product.objects.create(
+                product_code=row['Mã sản phẩm'],
+                product_name=row['Tên sản phẩm'],
+                weight=row['Trọng lượng'],
+                product_type=product_type,
+                brand=brand,
+                barcode=row['Mã vạch'],
+                unit_of_measurement=row['Đơn vị đo lường'],
+                retail_price=row['Giá bán lẻ'],
+                wholesale_price=row['Giá bán buôn'],
+                purchase_price=row['Giá mua'],
+                image=row['Hình ảnh'],
+                cost_price=row['Giá vốn'],
+                initial_stock=row['Tồn kho ban đầu']
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
+
+@csrf_exempt
+def upload_order(request):
+    if request.method == 'POST':
+        if request.FILES.get('file'):
+            uploaded_file = request.FILES['file']
+            df = pd.read_excel(uploaded_file)
+        elif request.POST.get('sheetUrl'):
+            sheet_url = request.POST.get('sheetUrl')
+            if not sheet_url.startswith('https://docs.google.com/spreadsheets/d/'):
+                return JsonResponse({'error': 'Invalid Google Sheets URL'}, status=400)
+
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+            sheet_url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=xlsx'
+            response = requests.get(sheet_url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch Google Sheets data'}, status=400)
+
+            df = pd.read_excel(io.BytesIO(response.content))
+        else:
+            return JsonResponse({'error': 'No file or URL provided'}, status=400)
+
+        required_columns = ['Mã đơn', 'Thông tin khách hàng', 'Thời gian tạo đơn', 'Hẹn giao', 'Nguồn', 'Phương thức thanh toán', 'Tham chiếu', 'Đường dẫn đơn hàng', 'Tổng tiền', 'STT', 'Sản phẩm', 'Số lượng', 'Đơn giá', 'Chiết khấu', 'Thành tiền']
+
+        if not all(col in df.columns for col in required_columns):
+            return JsonResponse({'error': 'Missing required columns in the file'}, status=400)
+
+        order_instance = None
+
+        for index, row in df.iterrows():
+            if order_instance is None:
+                customer, created = Customer.objects.get_or_create(customer_code=row['Thông tin khách hàng'])
+
+                order_instance = Order.objects.create(
+                    order_code=row['Mã đơn'],
+                    customer=customer,
+                    order_time=row['Thời gian tạo đơn'],
+                    delivery_date=row['Hẹn giao'],
+                    source=row['Nguồn'],
+                    payment_method=row['Phương thức thanh toán'],
+                    reference=row['Tham chiếu'],
+                    order_link=row['Đường dẫn đơn hàng'],
+                    total_amount=row['Tổng tiền'],
+                )
+
+            product, created = Product.objects.get_or_create(product_code=row['Sản phẩm'])
+            OrderLine.objects.create(
+                order=order_instance,
+                order_line_code=row['STT'],
+                product=product,
+                quantity=row['Số lượng'],
+                unit_price=row['Đơn giá'],
+                discount=row['Chiết khấu'],
+                total_price=row['Thành tiền'],
+            )
+
+        return JsonResponse({'message': 'Dữ liệu đã được tải lên thành công!'})
+
+    return JsonResponse({'error': 'Bad request'}, status=400)
+
 
 
 ############################################################
@@ -509,7 +859,7 @@ def list_order(request):
 ############################################################
 
 
-def customer_detail_view(request, customer_code):
+def customer_detail(request, customer_code):
     customer = get_object_or_404(Customer, customer_code=customer_code)
     orders = Order.objects.filter(customer=customer)
     context = {
@@ -518,6 +868,73 @@ def customer_detail_view(request, customer_code):
     }
     return render(request, 'pos/detail_customer.html', context)
 
+
+def customer_group_detail(request, group_code):
+    customer_group = get_object_or_404(CustomerGroup, group_code=group_code)
+    customer = Customer.objects.filter(customer_group=customer_group)
+    context = {
+        'customer_group': customer_group, 
+        'customer': customer
+    }
+    return render(request, 'pos/detail_customer_group.html', context)
+
+
+def supplier_group_detail(request, group_code):
+    supplier_group = get_object_or_404(SupplierGroup, group_code=group_code)
+    supplier = Supplier.objects.filter(supplier_group=supplier_group)
+    context = {
+        'supplier_group': supplier_group, 
+        'supplier': supplier
+    }
+    return render(request, 'pos/detail_supplier_group.html', context)
+
+
+def supplier_detail(request, supplier_code):
+    supplier = get_object_or_404(Supplier, supplier_code=supplier_code)
+    context = {
+        'supplier': supplier
+    }
+    return render(request, 'pos/detail_supplier.html', context)
+    
+
+def brand_detail(request, brand_code):
+    brand = get_object_or_404(Brand, brand_code=brand_code)
+    product = Product.objects.filter(brand=brand)
+    context = {
+        'brand': brand, 
+        'product': product
+    }
+    return render(request, 'pos/detail_brand.html', context)
+
+
+def product_type_detail(request, type_code):
+    product_type = get_object_or_404(ProductType, type_code=type_code)
+    product = Product.objects.filter(product_type=product_type)
+    context = {
+        'product_type': product_type, 
+        'product': product
+    }
+    return render(request, 'pos/detail_product_type.html', context)
+
+
+def product_detail(request, product_code):
+    product = get_object_or_404(Product, product_code=product_code)
+    order = OrderLine.objects.filter(product=product)
+    context = {
+        'product': product, 
+        'order': order
+    }
+    return render(request, 'pos/detail_product.html', context)
+
+
+def order_detail(request, order_code):
+    order = get_object_or_404(Order, order_code=order_code)
+    order_line = OrderLine.objects.filter(order=order)
+    context = {
+        'order': order, 
+        'order_line': order_line
+    }
+    return render(request, 'pos/detail_order.html', context)
 
 ############################################################
 ############################################################
@@ -531,3 +948,68 @@ def customer_delete(request, customer_code):
         return redirect('/customer')
 
     return render(request, 'pos/customer_confirm_delete.html', {'customer': customer})
+
+
+def customer_group_delete(request, group_code):
+    customer_group = get_object_or_404(CustomerGroup, group_code=group_code)
+    if request.method == 'POST':
+        customer_group.delete()
+        return redirect('/customer_group')
+
+    return render(request, 'pos/customer_group_confirm_delete.html', {'customer_group': customer_group})
+
+
+def supplier_group_delete(request, group_code):
+    supplier_group = get_object_or_404(SupplierGroup, group_code=group_code)
+    if request.method == 'POST':
+        supplier_group.delete()
+        return redirect('/supplier_group')
+
+    return render(request, 'pos/supplier_group_confirm_delete.html', {'supplier_group': supplier_group})
+
+
+def supplier_delete(request, supplier_code):
+    supplier = get_object_or_404(Supplier, supplier_code=supplier_code)
+    if request.method == 'POST':
+        supplier.delete()
+        return redirect('/supplier')
+
+    return render(request, 'pos/supplier_confirm_delete.html', {'supplier': supplier})
+
+
+def brand_delete(request, brand_code):
+    brand = get_object_or_404(Brand, brand_code=brand_code)
+    if request.method == 'POST':
+        brand.delete()
+        return redirect('/brand')
+
+    return render(request, 'pos/brand_confirm_delete.html', {'brand': brand})
+
+
+def product_type_delete(request, type_code):
+    product_type = get_object_or_404(ProductType, type_code=type_code)
+    if request.method == 'POST':
+        product_type.delete()
+        return redirect('/product_type')
+
+    return render(request, 'pos/product_type_confirm_delete.html', {'product_type': product_type})
+
+
+def product_delete(request, product_code):
+    product = get_object_or_404(Product, product_code=product_code)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('/product')
+
+    return render(request, 'pos/product_confirm_delete.html', {'product': product})
+
+
+def order_delete(request, order_code):
+    order = get_object_or_404(Order, order_code=order_code)
+    order_lines = OrderLine.objects.filter(order=order)
+    if request.method == 'POST':
+        order_lines.delete()
+        order.delete()
+        return redirect('/order')
+
+    return render(request, 'pos/order_confirm_delete.html', {'order': order})

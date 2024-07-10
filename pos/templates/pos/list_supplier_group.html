@@ -4,11 +4,49 @@
 <div class="col-sm-10">
   <br>
 <p class="center-text">Danh sách nhóm nhà cung cấp</p></p>
+<div class="row">
+  <div class="col-md-6 text-left">
+    <a href="#" data-bs-toggle="modal" data-bs-target="#uploadFileModal" class="btn" id="uploadFileBtn">
+        <i class="fas fa-file-upload"></i> Nhập file
+    </a>
 
-<div class="text-right">
-  <a href="http://127.0.0.1:8000/supplier_group/create">
-    <button class="btn custom-btn" type="button">Thêm nhóm hàng cung cấp</button>
-  </a>
+    <!-- Modal Structure -->
+    <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadFileModalLabel">Nạp dữ liệu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="file">Chọn file Excel:</label>
+                            <input type="file" id="file" name="file" class="form-control" accept=".xls,.xlsx">
+                        </div>
+                        <div class="form-group">
+                          <label for="sheetUrl">URL của Google Sheets:</label>
+                          <input type="text" id="sheetUrl" name="sheetUrl" class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                          <small class="form-text text-muted">Lưu ý: Hãy đảm bảo rằng liên kết Google Sheets đã được mở ở chế độ công khai.</small>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="submitUploadFileBtn">Nạp</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 text-right">
+    <a href="http://127.0.0.1:8000/supplier_group/create">
+          <button class="btn custom-btn" type="button">Thêm nhóm nhà cung cấp</button>
+      </a>
+  </div>
 </div>
 <br>
 
@@ -25,7 +63,7 @@
     <tbody>
       {% for group in supplier_group %}
       <tr>
-        <td>{{ group.group_code }}</td>
+        <td><a href="http://127.0.0.1:8000/supplier_group/{{ group.group_code }}/">{{ group.group_code }}</td>
         <td>{{ group.group_name }}</td>
         <td>{{ group.notes }}</td>
 
@@ -35,7 +73,57 @@
     </tbody>
   </table>
 {% else %}
-  <p>There are no supplier group available.</p>
+  <p>Không có bất kỳ nhóm nhà cung cấp nào.</p>
 {% endif %}
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    $('#uploadFileBtn').click(function() {
+      $('#uploadFileModal').modal('show');
+    });
 
+    $('#submitUploadFileBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "pos:upload_supplier_group" %}';
+      var csrftoken = '{{ csrf_token }}';
+      var fileInput = document.getElementById('file').files[0];
+      var sheetUrl = document.getElementById('sheetUrl').value;
+      var formData = new FormData();
+
+      if (fileInput) {
+        formData.append('file', fileInput);
+      } else if (sheetUrl) {
+        formData.append('sheetUrl', sheetUrl);
+      } else {
+        alert("Vui lòng chọn file hoặc nhập URL của Google Sheets.");
+        return;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        alert("File CSV đã được tải lên và xử lý thành công");
+        $('#uploadFileModal').modal('hide');
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi xử lý tệp CSV.");
+      });
+    });
+  });
+</script>
 {% endblock %}

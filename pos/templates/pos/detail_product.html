@@ -1,0 +1,96 @@
+{% extends "base_generic.html" %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $(".btn-outline-danger").first().click(function() {
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-10">
+  <div class="col-sm-10 mx-auto">
+    <br>
+    <p class="text-center mb-4">Sản phẩm: {{ product.product_name }}</p>
+    
+    <table class="table table-striped">
+        <tr>
+          <th>Loại sản phẩm</th>
+          <td><a href="http://127.0.0.1:8000/product_type/{{ product.product_type.type_code }}/">{{ product.product_type.type_name }}</a></td>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <td>{{ product.product_code }}</td>
+        </tr>
+        <tr>
+          <th>Tên sản phẩm</th>
+          <td>{{ product.product_name }}</td>
+        </tr>
+        <tr>
+          <th>Trọng lượng</th>
+          <td>{{ product.weight }}</td>
+        </tr>
+        <tr>
+          <th>Nhãn hiệu</th>
+          <td><a href="http://127.0.0.1:8000/brand/{{ product.brand.brand_code }}/">{{ product.brand.brand_name }}</a></td>
+        </tr>
+        <tr>
+          <th>Giá bán lẻ</th>
+          <td>{{ product.retail_price }}</td>
+        </tr>
+        <tr>
+          <th>Giá bán buôn</th>
+          <td>{{ product.wholesale_price }}</td>
+        </tr>
+        <tr>
+          <th>Giá vốn</th>
+          <td>{{ product.cost_price }}</td>
+        </tr>
+        <tr>
+          <th>Tồn kho ban đầu</th>
+          <td>{{ product.initial_stock }}</td>
+        </tr>
+      </table>
+    
+    {% if order %}
+      <h2 class="mt-4">Đơn hàng</h2>
+      <table class="table table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th>Mã đơn hàng</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Giá bán</th>
+            <th>Giảm giá</th>
+            <th>Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ord in order %}
+            <tr>
+                <td><a href="http://127.0.0.1:8000/order/{{ ord.order.order_code }}/">{{ ord.order.order_code }}</a></td>
+              <td>{{ ord.product }}</td>
+              <td>{{ ord.quantity }}</td>
+              <td>{{ ord.unit_price }}</td>
+              <td>{{ ord.discount }}</td>
+              <td>{{ ord.total_price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-center mt-4">Không có bất kỳ đơn hàng nào.</p>
+    {% endif %}
+    
+    {% if user.is_staff %}
+      <div class="d-grid gap-2 col-4 mx-auto mt-4">
+        <button class="btn btn-info btn-block" type="button">UPDATE</button>
+        <a href="http://127.0.0.1:8000/product/{{ product.product_code }}/delete/" class="btn btn-danger btn-block">DELETE</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

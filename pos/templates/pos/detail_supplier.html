@@ -1,0 +1,78 @@
+{% extends "base_generic.html" %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $(".btn-outline-danger").first().click(function() {
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-10">
+  <div class="col-sm-10 mx-auto">
+    <br>
+    <p class="text-center mb-4">Nhà cung cấp: {{ supplier.supplier_name }}</p>
+    
+    <table class="table table-striped">
+      <tr>
+        <th>Nhóm khách hàng</th>
+        <td><a href="http://127.0.0.1:8000/supplier_group/{{ supplier.supplier_group.supplier_group }}/">{{ supplier.supplier_group.supplier_group }}</a></td>
+      </tr>
+      <tr>
+        <th>ID</th>
+        <td>{{ supplier.supplier_code }}</td>
+      </tr>
+      <tr>
+        <th>Phone Number</th>
+        <td>{{ supplier.phone_number }}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ supplier.email }}</td>
+      </tr>
+      <tr>
+        <th>Region</th>
+        <td>{{ supplier.region }}</td>
+      </tr>
+      <tr>
+        <th>Ward</th>
+        <td>{{ supplier.ward }}</td>
+      </tr>
+      <tr>
+        <th>Address 1</th>
+        <td>{{ supplier.address_1 }}</td>
+      </tr>
+      <tr>
+        <th>Address 2</th>
+        <td>{{ supplier.address_2 }}</td>
+      </tr>
+      <tr>
+        <th>Fax Number</th>
+        <td>{{ supplier.fax_number }}</td>
+      </tr>
+      <tr>
+        <th>Tax Code</th>
+        <td>{{ supplier.tax_code }}</td>
+      </tr>
+      <tr>
+        <th>Website</th>
+        <td>{{ supplier.website }}</td>
+      </tr>
+      <tr>
+        <th>Debt</th>
+        <td>{{ supplier.debt }}</td>
+      </tr>
+    </table>
+    
+    {% if user.is_staff %}
+      <div class="d-grid gap-2 col-4 mx-auto mt-4">
+        <button class="btn btn-info btn-block" type="button">UPDATE</button>
+        <a href="http://127.0.0.1:8000/supplier/{{ supplier.supplier_code }}/delete/" class="btn btn-danger btn-block">DELETE</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

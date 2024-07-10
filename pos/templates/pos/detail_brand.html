@@ -1,0 +1,56 @@
+{% extends "base_generic.html" %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $(".btn-outline-danger").first().click(function() {
+
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-10">
+  <div class="col-sm-10 mx-auto">
+    <br>
+    <p class="text-center mb-4">Nhãn hiệu: {{ brand.brand_name }}</p>
+    
+    {% if product %}
+      <h2 class="mt-4">Sản phẩm</h2>
+      <table class="table table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th>Mã sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>Nhãn hiệu</th>
+            <th>Giá lẻ</th>
+            <th>Tồn kho</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prd in product %}
+            <tr>
+              <td><a href="http://127.0.0.1:8000/product/{{ prd.product_code }}/">{{prd.product_code }}</a></td>
+              <td>{{ prd.product_name }}</td>
+              <td>{{ prd.brand }}</td>
+              <td>{{ prd.retail_price }}</td>
+              <td>{{ prd.initial_stock }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-center mt-4">Không có bất kỳ sản phẩm nào.</p>
+    {% endif %}
+    
+    {% if user.is_staff %}
+      <div class="d-grid gap-2 col-4 mx-auto mt-4">
+        <button class="btn btn-info btn-block" type="button">UPDATE</button>
+        <a href="http://127.0.0.1:8000/brand/{{ brand.brand_code }}/delete/" class="btn btn-danger btn-block">DELETE</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base_generic.html" %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $(".btn-outline-danger").first().click(function() {
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-10">
+  <div class="col-sm-10 mx-auto">
+    <br>
+    <p class="text-center mb-4">Đơn hàng: {{ order.order_code }}</p>
+    
+    <table class="table table-striped">
+        <tr>
+          <th>Mã đơn hàng</th>
+          <td>{{ order.order_code }}</td>
+        </tr>
+        <tr>
+          <th>Khách hàng</th>
+          <td><a href="http://127.0.0.1:8000/customer/{{ order.customer.customer_code }}/">{{ order.customer.customer_name }}</a></td>
+        </tr>
+        <tr>
+          <th>Thời gian đặt hàng</th>
+          <td>{{ order.order_time }}</td>
+        </tr>
+        <tr>
+          <th>Ngày giao hàng</th>
+          <td>{{ order.delivery_date }}</td>
+        </tr>
+        <tr>
+          <th>Nguồn</th>
+          <td>{{ order.source }}</td>
+        </tr>
+        <tr>
+          <th>Phương thức thanh toán</th>
+          <td>{{ order.payment_method }}</td>
+        </tr>
+        <tr>
+          <th>Tham chiếu</th>
+          <td>{{ order.reference }}</td>
+        </tr>
+        <tr>
+          <th>Liên kết đơn hàng</th>
+          <td><a href="{{ order.order_link }}">{{ order.order_link }}</a></td>
+        </tr>
+        <tr>
+          <th>Tổng số tiền</th>
+          <td>{{ order.total_amount }}</td>
+        </tr>
+      </table>
+    
+    {% if order_line %}
+      <h2 class="mt-4">Đơn hàng</h2>
+      <table class="table table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th>Mã đơn hàng</th>
+            <th>STT đơn hàng</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Giá bán</th>
+            <th>Giảm giá</th>
+            <th>Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ord in order_line %}
+            <tr>
+              <td><a href="http://127.0.0.1:8000/order/{{ ord.order.order_code }}/">{{ ord.order.order_code }}</a></td>
+              <td>{{ ord.order_line_code }}</td>
+              <td>{{ ord.product }}</td>
+              <td>{{ ord.quantity }}</td>
+              <td>{{ ord.unit_price }}</td>
+              <td>{{ ord.discount }}</td>
+              <td>{{ ord.total_price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-center mt-4">Không có bất kỳ đơn hàng nào.</p>
+    {% endif %}
+    
+    {% if user.is_staff %}
+      <div class="d-grid gap-2 col-4 mx-auto mt-4">
+        <button class="btn btn-info btn-block" type="button">UPDATE</button>
+        <a href="http://127.0.0.1:8000/order/{{ order.order_code }}/delete/" class="btn btn-danger btn-block">DELETE</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

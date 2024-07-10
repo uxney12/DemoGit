@@ -13,12 +13,13 @@
 {% block content %}
 <div class="col-sm-10">
   <div class="col-sm-10 mx-auto">
-    <p class="text-center mb-4">Customer: {{ customer.customer_name }}</p>
+    <br>
+    <p class="text-center mb-4">Khách hàng: {{ customer.customer_name }}</p>
     
     <table class="table table-striped">
       <tr>
-        <th>Customer Segment</th>
-        <td><a href="{{ customer.customer_group.get_absolute_url }}">{{ customer.customer_group.group_name }}</a></td>
+        <th>Nhóm khách hàng</th>
+        <td><a href="http://127.0.0.1:8000/customer_group/{{ customer.customer_group.group_code }}/">{{ customer.customer_group.group_name }}</a></td>
       </tr>
       <tr>
         <th>ID</th>
@@ -27,7 +28,7 @@
     </table>
     
     {% if orders %}
-      <h2 class="mt-4">Orders</h2>
+      <h2 class="mt-4">Đơn hàng</h2>
       <table class="table table-bordered">
         <thead class="thead-light">
           <tr>
@@ -40,7 +41,7 @@
         <tbody>
           {% for order in orders %}
             <tr>
-              <td>{{ order.order_code }}</td>
+              <td><a href="http://127.0.0.1:8000/order/{{ order.order_code }}/">{{ order.order_code }}</a></td>
               <td>{{ order.order_time }}</td>
               <td>{{ order.payment_method }}</td>
               <td>{{ order.total_amount }}</td>
@@ -49,7 +50,7 @@
         </tbody>
       </table>
     {% else %}
-      <p class="text-center mt-4">There are no orders available.</p>
+      <p class="text-center mt-4">Không có bất kỳ đơn hàng nào.</p>
     {% endif %}
     
     {% if user.is_staff %}

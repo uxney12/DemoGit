@@ -4,14 +4,14 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <h1 class="mb-4">Xóa khách hàng</h1>
-            <p>Bạn chắc chắn muốn xóa khách hàng: <strong>{{ customer.customer_code }}</strong>?</p>
+            <h1 class="mb-4">Xóa nhãn hiệu</h1>
+            <p>Bạn chắc chắn muốn xóa nhãn hiệu: <strong>{{ brand.brand_code }}</strong>?</p>
 
             {% if user.is_staff %}
             <form method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger mr-2">DELETE</button>
-                <a href="{% url 'pos:customer_detail' customer_code=customer.customer_code %}" class="btn btn-secondary">CANCEL</a>
+                <a href="{% url 'pos:brand_detail' brand_code=brand.brand_code %}" class="btn btn-secondary">CANCEL</a>
             </form>
             {% else %}
             <p class="mt-4">Bạn không có quyền truy cập trang web này!!!!!</p>
