@@ -18,51 +18,51 @@
     
     <table class="table table-striped">
       <tr>
-        <th>Nhóm khách hàng</th>
-        <td><a href="http://127.0.0.1:8000/supplier_group/{{ supplier.supplier_group.supplier_group }}/">{{ supplier.supplier_group.supplier_group }}</a></td>
+        <th>Nhóm nhà cung cấp:</th>
+        <td><a href="http://127.0.0.1:8000/supplier_group/{{ supplier.supplier_group.group_code }}/">{{ supplier.supplier_group.group_name }}</a></td>
       </tr>
       <tr>
-        <th>ID</th>
+        <th>ID:</th>
         <td>{{ supplier.supplier_code }}</td>
       </tr>
       <tr>
-        <th>Phone Number</th>
+        <th>Số điện thoại:</th>
         <td>{{ supplier.phone_number }}</td>
       </tr>
       <tr>
-        <th>Email</th>
+        <th>Email:</th>
         <td>{{ supplier.email }}</td>
       </tr>
       <tr>
-        <th>Region</th>
+        <th>Khu vực:</th>
         <td>{{ supplier.region }}</td>
       </tr>
       <tr>
-        <th>Ward</th>
+        <th>Phường/Xã:</th>
         <td>{{ supplier.ward }}</td>
       </tr>
       <tr>
-        <th>Address 1</th>
+        <th>Địa chỉ 1:</th>
         <td>{{ supplier.address_1 }}</td>
       </tr>
       <tr>
-        <th>Address 2</th>
+        <th>Địa chỉ 2:</th>
         <td>{{ supplier.address_2 }}</td>
       </tr>
       <tr>
-        <th>Fax Number</th>
+        <th>Số fax:</th>
         <td>{{ supplier.fax_number }}</td>
       </tr>
       <tr>
-        <th>Tax Code</th>
+        <th>Mã số thuế:</th>
         <td>{{ supplier.tax_code }}</td>
       </tr>
       <tr>
-        <th>Website</th>
+        <th>Website:</th>
         <td>{{ supplier.website }}</td>
       </tr>
       <tr>
-        <th>Debt</th>
+        <th>Nợ:</th>
         <td>{{ supplier.debt }}</td>
       </tr>
     </table>

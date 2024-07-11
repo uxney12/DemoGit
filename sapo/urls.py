@@ -15,15 +15,32 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from pos import views
+
+# Initialize the router and register viewsets
+router = routers.DefaultRouter()
+router.register(r'customer_group', views.CustomerGroupViewSet)
+router.register(r'customer', views.CustomerViewSet)
+router.register(r'supplier_group', views.SupplierGroupViewSet)
+router.register(r'supplier', views.SupplierViewSet)
+router.register(r'product_type', views.ProductTypeViewSet)
+router.register(r'brand', views.BrandViewSet)
+router.register(r'product', views.ProductViewSet)
+router.register(r'order', views.OrderViewSet)
+router.register(r'order_line', views.OrderLineViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-]
+    path('admin/', admin.site.urls),  # Admin site URL
 
-# Use include() to add paths from the catalog application
-from django.urls import include
-
-urlpatterns += [
+    # Include the pos app URLs
     path('', include('pos.urls')),
+
+    # DRF router URLs
+    path('DRF/', include(router.urls)),
+
+    # DRF authentication URLs
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
+

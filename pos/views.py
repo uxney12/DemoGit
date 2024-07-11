@@ -1013,3 +1013,66 @@ def order_delete(request, order_code):
         return redirect('/order')
 
     return render(request, 'pos/order_confirm_delete.html', {'order': order})
+    
+
+############################################################
+############################################################
+############################################################
+
+
+from rest_framework import permissions, viewsets
+from .serializers import CustomerGroupSerializer, CustomerSerializer, SupplierGroupSerializer, SupplierSerializer, ProductTypeSerializer, BrandSerializer, ProductSerializer, OrderSerializer, OrderLineSerializer
+
+
+class CustomerGroupViewSet(viewsets.ModelViewSet):
+    queryset = CustomerGroup.objects.all()
+    serializer_class = CustomerGroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class SupplierGroupViewSet(viewsets.ModelViewSet):
+    queryset = SupplierGroup.objects.all()
+    serializer_class = SupplierGroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class SupplierViewSet(viewsets.ModelViewSet):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ProductTypeViewSet(viewsets.ModelViewSet):
+    queryset = ProductType.objects.all()
+    serializer_class = ProductTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BrandViewSet(viewsets.ModelViewSet):
+    queryset = Brand.objects.all()
+    serializer_class = BrandSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class OrderLineViewSet(viewsets.ModelViewSet):
+    queryset = OrderLine.objects.all()
+    serializer_class = OrderLineSerializer
+    permission_classes = [permissions.IsAuthenticated]
