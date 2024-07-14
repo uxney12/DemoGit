@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine
+from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine, FeedBack
 from django.utils.timezone import now as timezone_now
 import pandas as pd 
 import os 
@@ -1076,3 +1076,49 @@ class OrderLineViewSet(viewsets.ModelViewSet):
     queryset = OrderLine.objects.all()
     serializer_class = OrderLineSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+############################################################
+############################################################
+############################################################
+
+
+# pos/views.py
+from time import sleep
+from django.core.mail import send_mail
+from celery import shared_task
+from django.views.generic.edit import FormView
+from django.views.generic.base import TemplateView
+
+@shared_task()
+def feedback(request):
+    email = ""
+    message = ""
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        print(email)
+        print(message)
+        if email and message:  
+            sleep(20)
+            print("1111111111111111111")
+            send_mail(
+                "Your Feedback",
+                f"\t{message}\n\nThank you!",
+                "support@example.com",
+                [email],
+                fail_silently=False,
+            )
+            return redirect('/success')  
+    print("1")
+    context = {
+        'email': email,
+        'message': message
+    }
+    
+    return render(request, 'feedback/feedback.html', context)
+
+def success(request):
+    print("XXXXXXXXXXXXXXXXXXXXXX")
+    return render(request, 'feedback/success.html')

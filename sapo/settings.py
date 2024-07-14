@@ -137,3 +137,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Thêm dòng này để tránh cảnh báo
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

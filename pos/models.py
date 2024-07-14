@@ -124,3 +124,11 @@ class OrderLine(models.Model):
 
     def __str__(self):
         return f'{self.order.order_code} - {self.order_line_code} - {self.product.product_code}'
+
+
+class FeedBack(models.Model):
+    email = models.EmailField(max_length=255, null=True, blank=True)
+    message = models.CharField(max_length=100000, null=True)
+
+    def __str__(self):
+        return f'{self.order.email}'

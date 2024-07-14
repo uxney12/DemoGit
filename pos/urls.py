@@ -60,5 +60,10 @@ urlpatterns = [
     path('product_type_upload', views.upload_product_type, name='upload_product_type'),
     path('product_upload', views.upload_product, name='upload_product'),
     path('order_upload', views.upload_order, name='upload_order'),
+
+    ###############################################################################
+
+    path('feedback/', views.feedback, name='feedback'),
+    path('success/', views.success, name='success'),
 ]
 

@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="col-sm-6">
+    <br>
+    <p class="center-text">FEEDBACK FORM</p>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea name="message" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <button type="submit" class="btn custom-btn">Submit Feedback</button>
+        </div>
+    </form>
+
+    {% if errors %}
+        <div class="error">
+            <h3>Please correct the errors below:</h3>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
