@@ -1100,9 +1100,12 @@ def feedback(request):
         message = request.POST.get('message')
         print(email)
         print(message)
+        FeedBack.objects.create(
+            email=email,
+            message=message
+        ) 
         if email and message:  
             sleep(20)
-            print("1111111111111111111")
             send_mail(
                 "Your Feedback",
                 f"\t{message}\n\nThank you!",
@@ -1111,7 +1114,6 @@ def feedback(request):
                 fail_silently=False,
             )
             return redirect('/success')  
-    print("1")
     context = {
         'email': email,
         'message': message
@@ -1120,5 +1122,4 @@ def feedback(request):
     return render(request, 'feedback/feedback.html', context)
 
 def success(request):
-    print("XXXXXXXXXXXXXXXXXXXXXX")
     return render(request, 'feedback/success.html')

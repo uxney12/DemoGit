@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine
+from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine, FeedBack
 
 admin.site.register(CustomerGroup)
 admin.site.register(Customer)
@@ -12,3 +12,4 @@ admin.site.register(Brand)
 admin.site.register(Product)
 admin.site.register(Order)
 admin.site.register(OrderLine)
+admin.site.register(FeedBack)
