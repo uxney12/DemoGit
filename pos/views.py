@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine, FeedBack
+from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine, FeedBack, Message
 from django.utils.timezone import now as timezone_now
 import pandas as pd 
 import os 
@@ -1123,3 +1123,17 @@ def feedback(request):
 
 def success(request):
     return render(request, 'feedback/success.html')
+
+
+############################################################
+############################################################
+############################################################
+
+
+def chat(request):
+  return render(request, 'chat/chat.html')
+
+def room(request, room_name):
+    username = request.GET.get('username', 'Anonymous')
+    messages = Message.objects.filter(room=room_name)[0:25]
+    return render(request, 'chat/room.html', {'room_name': room_name, 'username': username, 'messages': messages})

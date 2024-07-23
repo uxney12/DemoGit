@@ -65,5 +65,10 @@ urlpatterns = [
 
     path('feedback/', views.feedback, name='feedback'),
     path('success/', views.success, name='success'),
+    
+    ###############################################################################
+
+    path('chat/', views.chat, name='chat'),
+    path('chat/<str:room_name>/', views.room, name='room')
 ]
 

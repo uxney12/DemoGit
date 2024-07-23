@@ -132,3 +132,15 @@ class FeedBack(models.Model):
 
     def __str__(self):
         return f'{self.email} - {self.message}'
+
+
+class Message(models.Model):
+    username = models.CharField(max_length=255)
+    room = models.CharField(max_length=255)
+    content = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('date_added',)
+    def __str__(self):
+        return f'{self.room} - {self.username} - {self.content}'

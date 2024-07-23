@@ -5,14 +5,13 @@
     <p class="center-text">FEEDBACK FORM</p>
     <form method="post">
         {% csrf_token %}
-        
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
+            <label for="email" class="form-label">Email:</label>
             <input type="email" name="email" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label for="message" class="form-label">Message</label>
+            <label for="message" class="form-label">Message:</label>
             <textarea name="message" class="form-control" rows="4" required></textarea>
         </div>
 

@@ -36,6 +36,7 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     'pos',
     'rest_framework',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,6 +74,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sapo.wsgi.application'
+ASGI_APPLICATION = "sapo.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 import environ
 env = environ.Env()

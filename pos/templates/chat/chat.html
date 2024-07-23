@@ -1,0 +1,47 @@
+
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="col-sm-6">
+    <br>
+    <p class="center-text">CHAT APP</p>
+    <form method="get">
+        <div class="mb-3">
+            <label for="room-name-input" class="form-label">Room name:</label>
+            <input type="text" name="room-name" class="form-control" id="room-name-input" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="username-input" class="form-label">Username:</label>
+            <input type="text" name="username" class="form-control" id="username-input" required>
+        </div>
+
+        <div class="d-grid gap-2 col-4 mx-auto">
+            <a class="btn custom-btn" id="room-name-submit">Submit</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    // Automatically set the focus to the room name input
+        document.querySelector('#room-name-input').focus();
+
+        // If you hit "enter" on the keyboard, trigger the click method
+        document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#room-name-submit').click();
+        }
+        };
+
+        // When you submit the form, redirect the user to the room page
+        document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        var userName = document.querySelector('#username-input').value;
+
+        window.location.replace(roomName + '/?username=' + userName);
+        };
+</script>
+{% endblock %}
+

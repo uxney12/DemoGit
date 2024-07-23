@@ -21,6 +21,10 @@
         color: #57A6A1;
         font-weight: bold;
       }
+      small {
+        font-size: 14px;
+        color: grey;
+      }
 
       h5 {
         font-size: 20px;
@@ -75,6 +79,7 @@
       .col-auto {
       margin-right: 10px; 
       }
+      
     </style>
   </head>
   <body>
@@ -87,9 +92,10 @@
                 <br>
                 <a href="{% url 'pos:index' %}">Home</a>
                 <a href="{% url 'pos:feedback' %}">Feedback</a>
+                <a href="{% url 'pos:chat' %}">Chat App</a>
               </div>
               {% if user.is_staff %}
-                <hr>
+                <hr style="width: 93% ">
                 <p class="center-text">Staff</p>
                 {% if perms.pos.customer %}
                 <div class="dropdown">
