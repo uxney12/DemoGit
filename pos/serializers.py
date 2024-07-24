@@ -1,6 +1,9 @@
 from .models import CustomerGroup, Customer, SupplierGroup, Supplier, ProductType, Brand, Product, Order, OrderLine
 from rest_framework import serializers
 
+# Chuyển đổi dữ liệu của mô hình thành định dạng JSON (hoặc định dạng khác) mà các API có thể sử dụng. 
+# Serializer giúp kết nối giữa các mô hình Django và các dữ liệu JSON mà frontend hoặc các hệ thống khác có thể dễ dàng sử dụng và hiểu.
+
 
 class CustomerGroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -1022,7 +1022,7 @@ def order_delete(request, order_code):
 
 from rest_framework import permissions, viewsets
 from .serializers import CustomerGroupSerializer, CustomerSerializer, SupplierGroupSerializer, SupplierSerializer, ProductTypeSerializer, BrandSerializer, ProductSerializer, OrderSerializer, OrderLineSerializer
-
+# Tạo và quản lý các API endpoint cho mô hình, đảm bảo chỉ những người dùng đã đăng nhập mới có quyền truy cập.
 
 class CustomerGroupViewSet(viewsets.ModelViewSet):
     queryset = CustomerGroup.objects.all()
@@ -1131,7 +1131,22 @@ def success(request):
 
 
 def chat(request):
-  return render(request, 'chat/chat.html')
+    rooms = set(Message.objects.values_list('room', flat=True))
+    room_data = []
+
+    for room in rooms:
+        latest_message = Message.objects.filter(room=room).order_by('-date_added').first()
+        if latest_message:
+            room_data.append({
+                'room': room,
+                'latest_message': latest_message.content,
+                'last_sender': latest_message.username
+            })
+    
+    context = {
+        'rooms': room_data,
+    }
+    return render(request, 'chat/chat.html', context)
 
 def room(request, room_name):
     username = request.GET.get('username', 'Anonymous')

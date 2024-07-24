@@ -9,7 +9,7 @@
     <form method="get">
         <div class="mb-3">
             <label for="room-name-input" class="form-label">Room name:</label>
-            <input type="text" name="room-name" class="form-control" id="room-name-input" required>
+            <input type="text" name="room-name" class="form-control" id="room-name-input" readonly>
         </div>
 
         <div class="mb-3">
@@ -21,10 +21,45 @@
             <a class="btn custom-btn" id="room-name-submit">Submit</a>
         </div>
     </form>
+    <br>
+    {% if user.is_staff %}
+    {% if rooms %}
+    <div>
+        <p>Available Rooms:</p>
+        <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+            <th>Phòng</th>
+            <th>Tên khách hàng</th>
+            <th>Tin nhắn cuối cùng</th>
+            <th>Người nhắn cuối cùng</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for room in rooms %}
+            <tr>
+                <td><a href="http://127.0.0.1:8000/chat/{{ room.room }}/?username=admin">{{ room.room }}</a></td>
+                <td>{{ room.room }}</td>
+                <td>{{ room.latest_message }}</td>
+                <td>{{ room.last_sender }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% endif %}
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
+
+        $(document).ready(function() {
+            $("#username-input").on("input", function() {
+                var username = $(this).val();
+                $("#room-name-input").val(username);
+            });
+        });
     // Automatically set the focus to the room name input
         document.querySelector('#room-name-input').focus();
 
