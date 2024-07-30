@@ -772,9 +772,6 @@ def create_order(request):
     customers = Customer.objects.all()
     products = Product.objects.all()
     customer_group = CustomerGroup.objects.all()     
-    # customers = list(Customer.objects.all().values('customer_code', 'customer_name'))
-    # products = list(Product.objects.all().values('product_code', 'product_name', 'retail_price'))
-    # customer_group = list(CustomerGroup.objects.all().values('group_code', 'group_name'))    
     context = {
         'current_time': current_time,
         'customers': customers,
