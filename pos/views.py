@@ -1086,37 +1086,20 @@ from django.core.mail import send_mail
 from celery import shared_task
 from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
+from .tasks import send_feedback_email_task
 
 @shared_task()
 def feedback(request):
-    email = ""
-    message = ""
-
     if request.method == 'POST':
         email = request.POST.get('email')
         message = request.POST.get('message')
-        print(email)
-        print(message)
-        FeedBack.objects.create(
-            email=email,
-            message=message
-        ) 
-        if email and message:  
-            sleep(20)
-            send_mail(
-                "Your Feedback",
-                f"\t{message}\n\nThank you!",
-                "support@example.com",
-                [email],
-                fail_silently=False,
-            )
-            return redirect('/success')  
-    context = {
-        'email': email,
-        'message': message
-    }
+
+        if email and message:
+            x = send_feedback_email_task.delay(email, message)
+            print(f'Task ID: {x.id}')
+            return render(request, 'feedback/success.html')
     
-    return render(request, 'feedback/feedback.html', context)
+    return render(request, 'feedback/feedback.html')
 
 def success(request):
     return render(request, 'feedback/success.html')
